@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>GoldFinance - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-[#0F0F0F] text-white flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-[#1A1A1A] min-h-screen p-6 border-r border-[#2A2A2A]">
+
+    <h2 class="text-xl font-semibold mb-10">
+      Gold<span class="text-[#D4AF37]">Finance</span>
+    </h2>
+
+    <nav class="space-y-4">
+      <button class="w-full text-left p-3 rounded-lg bg-[#111] border-l-4 border-[#D4AF37]">
+        Dashboard
+      </button>
+
+      <button class="w-full text-left p-3 rounded-lg hover:bg-[#111] transition">
+        Transações
+      </button>
+
+      <button onclick="Auth.logout()" class="w-full text-left p-3 rounded-lg hover:bg-[#111] transition text-red-400">
+        Sair
+      </button>
+    </nav>
+
+  </aside>
+
+  <!-- Área Principal -->
+  <main class="flex-1 p-10">
+
+    <div class="flex justify-between items-center mb-10">
+      <div>
+        <h1 class="text-2xl font-semibold">
+          Olá, <span id="userName" class="text-[#D4AF37]"></span>
+        </h1>
+        <p class="text-gray-400" id="currentDate"></p>
+      </div>
+    </div>
+
+    <!-- Saldo Principal -->
+    <div class="bg-[#1A1A1A] p-8 rounded-2xl border border-[#2A2A2A] mb-8">
+      <p class="text-gray-400">Saldo Atual</p>
+      <h2 id="balanceValue" class="text-4xl font-bold mt-2 text-[#D4AF37]">
+  R$ 0,00
+</h2>
+    </div>
+
+  </main>
+
+  <script src="js/core/storage.js"></script>
+  <script src="js/modules/auth.js"></script>
+  <script src="js/modules/transactions.js"></script>
+
+  <!-- Botão Flutuante -->
+<button 
+  id="openModal"
+  class="fixed bottom-8 right-8 bg-[#D4AF37] text-black w-14 h-14 rounded-full text-2xl shadow-lg hover:scale-110 transition flex items-center justify-center">
+  +
+</button>
+
+<!-- Modal -->
+<div id="transactionModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center">
+
+  <div class="bg-[#1A1A1A] p-8 rounded-2xl w-96 border border-[#2A2A2A]">
+
+    <h2 class="text-xl font-semibold mb-6">
+      Nova <span class="text-[#D4AF37]">Transação</span>
+    </h2>
+
+    <form id="transactionForm" class="space-y-4">
+
+      <input
+        type="text"
+        id="description"
+        placeholder="Descrição"
+        class="w-full p-3 rounded-lg bg-black text-white border border-[#2A2A2A] focus:outline-none focus:border-[#D4AF37]"
+        required
+      />
+
+      <input
+        type="number"
+        id="amount"
+        placeholder="Valor"
+        class="w-full p-3 rounded-lg bg-black text-white border border-[#2A2A2A] focus:outline-none focus:border-[#D4AF37]"
+        required
+      />
+
+      <select
+        id="type"
+        class="w-full p-3 rounded-lg bg-black text-white border border-[#2A2A2A] focus:outline-none focus:border-[#D4AF37]"
+      >
+        <option value="income">Entrada</option>
+        <option value="expense">Saída</option>
+      </select>
+
+      <button
+        type="submit"
+        class="w-full bg-[#D4AF37] text-black font-semibold p-3 rounded-lg hover:opacity-90 transition">
+        Salvar
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+  <script>
+    Auth.checkAuth();
+
+    // ===== MODAL =====
+
+const openModalBtn = document.getElementById("openModal");
+const modal = document.getElementById("transactionModal");
+const form = document.getElementById("transactionForm");
+
+// Abrir modal
+openModalBtn.addEventListener("click", () => {
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+});
+
+// Fechar ao clicar fora
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modal.classList.add("hidden");
+  }
+});
+
+// Salvar transação
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const description = document.getElementById("description").value;
+  const amount = parseFloat(document.getElementById("amount").value);
+  const type = document.getElementById("type").value;
+
+  Transactions.add({
+    description,
+    amount,
+    type
+  });
+
+  modal.classList.add("hidden");
+  form.reset();
+  location.reload();
+});
+
+    const user = Storage.get("gold_user");
+
+    document.getElementById("userName").innerText = user.name;
+
+    const today = new Date();
+    document.getElementById("currentDate").innerText =
+      today.toLocaleDateString("pt-BR", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+
+      
+    const balance = Transactions.getBalance();
+
+    document.getElementById("balanceValue").innerText =
+    balance.total.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    });
+
+    
+
+  </script>
+
+  
+
+</body>
+</html>
