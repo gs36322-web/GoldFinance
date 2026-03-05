@@ -1,13 +1,20 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
+document.addEventListener("DOMContentLoaded",()=>{
 
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
+const loginForm=document.getElementById("loginForm");
 
-      const email = e.target[0].value;
+if(loginForm){
 
-      Auth.login(email);
-    });
-  }
+loginForm.addEventListener("submit",(e)=>{
+
+e.preventDefault();
+
+const email=e.target[0].value;
+const password=e.target[1].value;
+
+Auth.login(email,password);
+
+});
+
+}
+
 });
