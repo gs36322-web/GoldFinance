@@ -1,193 +1,340 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>GoldFinance - Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<title>GoldFinance - Dashboard</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+font-family:'Inter',sans-serif;
+}
+</style>
+
 </head>
 
 <body class="bg-[#0F0F0F] text-white flex">
 
-  <!-- Sidebar -->
-  <aside class="w-64 bg-[#1A1A1A] min-h-screen p-6 border-r border-[#2A2A2A]">
+<!-- SIDEBAR -->
 
-    <h2 class="text-xl font-semibold mb-10">
-      Gold<span class="text-[#D4AF37]">Finance</span>
-    </h2>
+<aside class="w-64 bg-[#1A1A1A] min-h-screen p-6 border-r border-[#2A2A2A]">
 
-    <nav class="space-y-4">
-      <button class="w-full text-left p-3 rounded-lg bg-[#111] border-l-4 border-[#D4AF37]">
-        Dashboard
-      </button>
-
-      <button class="w-full text-left p-3 rounded-lg hover:bg-[#111] transition">
-        Transações
-      </button>
-
-      <button onclick="Auth.logout()" class="w-full text-left p-3 rounded-lg hover:bg-[#111] transition text-red-400">
-        Sair
-      </button>
-    </nav>
-
-  </aside>
-
-  <!-- Área Principal -->
-  <main class="flex-1 p-10">
-
-    <div class="flex justify-between items-center mb-10">
-      <div>
-        <h1 class="text-2xl font-semibold">
-          Olá, <span id="userName" class="text-[#D4AF37]"></span>
-        </h1>
-        <p class="text-gray-400" id="currentDate"></p>
-      </div>
-    </div>
-
-    <!-- Saldo Principal -->
-    <div class="bg-[#1A1A1A] p-8 rounded-2xl border border-[#2A2A2A] mb-8">
-      <p class="text-gray-400">Saldo Atual</p>
-      <h2 id="balanceValue" class="text-4xl font-bold mt-2 text-[#D4AF37]">
-  R$ 0,00
+<h2 class="text-xl font-semibold mb-10">
+Gold<span class="text-[#D4AF37]">Finance</span>
 </h2>
-    </div>
 
-  </main>
+<nav class="space-y-4">
 
-  <script src="js/core/storage.js"></script>
-  <script src="js/modules/auth.js"></script>
-  <script src="js/modules/transactions.js"></script>
-
-  <!-- Botão Flutuante -->
-<button 
-  id="openModal"
-  class="fixed bottom-8 right-8 bg-[#D4AF37] text-black w-14 h-14 rounded-full text-2xl shadow-lg hover:scale-110 transition flex items-center justify-center">
-  +
+<button class="w-full text-left p-3 rounded-lg bg-[#111] border-l-4 border-[#D4AF37]">
+Dashboard
 </button>
 
-<!-- Modal -->
-<div id="transactionModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center">
+<button class="w-full text-left p-3 rounded-lg hover:bg-[#111] transition">
+Transações
+</button>
 
-  <div class="bg-[#1A1A1A] p-8 rounded-2xl w-96 border border-[#2A2A2A]">
+<button onclick="Auth.logout()" class="w-full text-left p-3 rounded-lg hover:bg-[#111] transition text-red-400">
+Sair
+</button>
 
-    <h2 class="text-xl font-semibold mb-6">
-      Nova <span class="text-[#D4AF37]">Transação</span>
-    </h2>
+</nav>
 
-    <form id="transactionForm" class="space-y-4">
+</aside>
 
-      <input
-        type="text"
-        id="description"
-        placeholder="Descrição"
-        class="w-full p-3 rounded-lg bg-black text-white border border-[#2A2A2A] focus:outline-none focus:border-[#D4AF37]"
-        required
-      />
 
-      <input
-        type="number"
-        id="amount"
-        placeholder="Valor"
-        class="w-full p-3 rounded-lg bg-black text-white border border-[#2A2A2A] focus:outline-none focus:border-[#D4AF37]"
-        required
-      />
+<!-- CONTEÚDO -->
 
-      <select
-        id="type"
-        class="w-full p-3 rounded-lg bg-black text-white border border-[#2A2A2A] focus:outline-none focus:border-[#D4AF37]"
-      >
-        <option value="income">Entrada</option>
-        <option value="expense">Saída</option>
-      </select>
+<main class="flex-1 p-10">
 
-      <button
-        type="submit"
-        class="w-full bg-[#D4AF37] text-black font-semibold p-3 rounded-lg hover:opacity-90 transition">
-        Salvar
-      </button>
+<!-- TOPO -->
 
-    </form>
+<div class="flex justify-between items-center mb-10">
 
-  </div>
+<div>
+<h1 class="text-2xl font-semibold">
+Olá, <span id="userName" class="text-[#D4AF37]"></span>
+</h1>
+
+<p class="text-gray-400" id="currentDate"></p>
+</div>
+
+<select id="monthFilter" class="bg-[#1A1A1A] border border-[#2A2A2A] p-2 rounded-lg">
+<option value="all">Todos os meses</option>
+</select>
 
 </div>
 
-  <script>
-    Auth.checkAuth();
 
-    // ===== MODAL =====
+<!-- CARDS -->
 
-const openModalBtn = document.getElementById("openModal");
-const modal = document.getElementById("transactionModal");
-const form = document.getElementById("transactionForm");
+<div class="grid grid-cols-3 gap-6 mb-8">
 
-// Abrir modal
-openModalBtn.addEventListener("click", () => {
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-});
+<div class="bg-[#1A1A1A] p-6 rounded-2xl border border-[#2A2A2A]">
+<p class="text-gray-400">Entradas</p>
+<h2 id="incomeValue" class="text-2xl font-bold text-green-400 mt-2">
+R$ 0,00
+</h2>
+</div>
 
-// Fechar ao clicar fora
-modal.addEventListener("click", (e) => {
-  if (e.target === modal) {
-    modal.classList.add("hidden");
-  }
-});
+<div class="bg-[#1A1A1A] p-6 rounded-2xl border border-[#2A2A2A]">
+<p class="text-gray-400">Saídas</p>
+<h2 id="expenseValue" class="text-2xl font-bold text-red-400 mt-2">
+R$ 0,00
+</h2>
+</div>
 
-// Salvar transação
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
+<div class="bg-[#1A1A1A] p-6 rounded-2xl border border-[#D4AF37]">
+<p class="text-gray-400">Saldo</p>
+<h2 id="balanceValue" class="text-3xl font-bold text-[#D4AF37] mt-2">
+R$ 0,00
+</h2>
+</div>
 
-  const description = document.getElementById("description").value;
-  const amount = parseFloat(document.getElementById("amount").value);
-  const type = document.getElementById("type").value;
+</div>
 
-  Transactions.add({
-    description,
-    amount,
-    type
-  });
 
-  modal.classList.add("hidden");
-  form.reset();
-  location.reload();
-});
+<!-- GRÁFICO -->
 
-    const user = Storage.get("gold_user");
+<div class="bg-[#1A1A1A] p-6 rounded-2xl border border-[#2A2A2A] mb-8">
 
-    document.getElementById("userName").innerText = user.name;
+<h2 class="text-xl font-semibold mb-6">
+Resumo <span class="text-[#D4AF37]">Financeiro</span>
+</h2>
 
-    const today = new Date();
-    document.getElementById("currentDate").innerText =
-      today.toLocaleDateString("pt-BR", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      });
+<div class="h-52">
+<canvas id="financeChart"></canvas>
+</div>
 
-      
-    const balance = Transactions.getBalance();
+</div>
 
-    document.getElementById("balanceValue").innerText =
-    balance.total.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL"
-    });
 
-    
+<!-- HISTÓRICO -->
 
-  </script>
+<div class="bg-[#1A1A1A] p-6 rounded-2xl border border-[#2A2A2A]">
 
-  
+<h2 class="text-xl font-semibold mb-6">
+Histórico de <span class="text-[#D4AF37]">Transações</span>
+</h2>
+
+<ul id="transactionList" class="space-y-3"></ul>
+
+</div>
+
+</main>
+
+
+
+<!-- BOTÃO + -->
+
+<button
+id="openModal"
+class="fixed bottom-8 right-8 bg-[#D4AF37] text-black w-16 h-16 rounded-full text-3xl shadow-lg hover:scale-110 transition flex items-center justify-center">
+
++
+
+</button>
+
+
+
+<!-- MODAL -->
+
+<div id="transactionModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center">
+
+<div class="bg-[#1A1A1A] p-8 rounded-2xl w-96 border border-[#2A2A2A]">
+
+<h2 class="text-xl font-semibold mb-6">
+Nova <span class="text-[#D4AF37]">Transação</span>
+</h2>
+
+<form id="transactionForm" class="space-y-4">
+
+<input
+type="text"
+id="description"
+placeholder="Descrição"
+class="w-full p-3 rounded-lg bg-black border border-[#2A2A2A]"
+required
+>
+
+<input
+type="number"
+id="amount"
+placeholder="Valor"
+class="w-full p-3 rounded-lg bg-black border border-[#2A2A2A]"
+required
+>
+
+<select
+id="type"
+class="w-full p-3 rounded-lg bg-black border border-[#2A2A2A]"
+>
+
+<option value="income">Entrada</option>
+<option value="expense">Saída</option>
+
+</select>
+
+<button
+type="submit"
+class="w-full bg-[#D4AF37] text-black font-semibold p-3 rounded-lg">
+
+Salvar
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+
+<script src="js/core/storage.js"></script>
+<script src="js/modules/auth.js"></script>
+<script src="js/modules/transactions.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+<script>
+
+Auth.checkAuth()
+
+const user = Storage.get("gold_user")
+
+document.getElementById("userName").innerText = user.name
+
+
+const today = new Date()
+
+document.getElementById("currentDate").innerText =
+today.toLocaleDateString("pt-BR",{weekday:"long",year:"numeric",month:"long",day:"numeric"})
+
+
+
+const balance = Transactions.getBalance()
+
+
+
+document.getElementById("incomeValue").innerText =
+balance.income.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})
+
+document.getElementById("expenseValue").innerText =
+balance.expense.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})
+
+document.getElementById("balanceValue").innerText =
+balance.total.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})
+
+
+
+/* HISTÓRICO */
+
+const list = document.getElementById("transactionList")
+
+const transactions = Transactions.getAll()
+
+transactions.reverse().forEach(t=>{
+
+const div=document.createElement("div")
+
+div.className="flex justify-between items-center bg-[#111] p-4 rounded-lg border border-[#2A2A2A]"
+
+div.innerHTML=`
+
+<div>
+
+<p class="font-semibold">${t.description}</p>
+
+<p class="text-sm text-gray-400">
+${t.type==="income"?"Entrada":"Saída"}
+</p>
+
+</div>
+
+<div class="${t.type==="income"?"text-green-400":"text-red-400"} font-semibold">
+
+${t.amount.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+
+</div>
+`
+
+list.appendChild(div)
+
+})
+
+
+
+/* GRÁFICO */
+
+const ctx=document.getElementById("financeChart")
+
+new Chart(ctx,{
+type:"bar",
+
+data:{
+labels:["Entradas","Saídas"],
+datasets:[{
+data:[balance.income,balance.expense],
+backgroundColor:["#22c55e","#ef4444"],
+borderRadius:8,
+barThickness:30
+}]
+},
+
+options:{
+indexAxis:"y",
+plugins:{legend:{display:false}},
+scales:{
+x:{ticks:{color:"#aaa"},grid:{color:"#222"}},
+y:{ticks:{color:"#aaa"},grid:{display:false}}
+}
+}
+
+})
+
+
+
+/* MODAL */
+
+const openModal=document.getElementById("openModal")
+const modal=document.getElementById("transactionModal")
+const form=document.getElementById("transactionForm")
+
+openModal.onclick=()=>{
+modal.classList.remove("hidden")
+modal.classList.add("flex")
+}
+
+modal.onclick=(e)=>{
+if(e.target===modal){
+modal.classList.add("hidden")
+}
+}
+
+form.addEventListener("submit",(e)=>{
+
+e.preventDefault()
+
+const description=document.getElementById("description").value
+const amount=parseFloat(document.getElementById("amount").value)
+const type=document.getElementById("type").value
+
+Transactions.add({
+description,
+amount,
+type
+})
+
+location.reload()
+
+})
+
+</script>
 
 </body>
 </html>
