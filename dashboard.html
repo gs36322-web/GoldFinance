@@ -2,6 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>GoldFinance - Dashboard</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
@@ -17,11 +19,10 @@ font-family:'Inter',sans-serif;
 
 </head>
 
-<body class="bg-[#0F0F0F] text-white flex">
+<body class="bg-[#0F0F0F] text-white flex flex-col md:flex-row">
 
 <!-- SIDEBAR -->
-
-<aside class="w-64 bg-[#1A1A1A] min-h-screen p-6 border-r border-[#2A2A2A]">
+<aside class="w-full md:w-64 bg-[#1A1A1A] min-h-screen p-6 border-r border-[#2A2A2A]">
 
 <h2 class="text-xl font-semibold mb-10">
 Gold<span class="text-[#D4AF37]">Finance</span>
@@ -45,14 +46,11 @@ Sair
 
 </aside>
 
-
 <!-- CONTEÚDO -->
-
-<main class="flex-1 p-10">
+<main class="flex-1 p-4 md:p-10">
 
 <!-- TOPO -->
-
-<div class="flex justify-between items-center mb-10">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
 
 <div>
 <h1 class="text-2xl font-semibold">
@@ -62,16 +60,14 @@ Olá, <span id="userName" class="text-[#D4AF37]"></span>
 <p class="text-gray-400" id="currentDate"></p>
 </div>
 
-<select id="monthFilter" class="bg-[#1A1A1A] border border-[#2A2A2A] p-2 rounded-lg">
+<select id="monthFilter" class="bg-[#1A1A1A] border border-[#2A2A2A] p-2 rounded-lg w-full md:w-auto">
 <option value="all">Todos os meses</option>
 </select>
 
 </div>
 
-
 <!-- CARDS -->
-
-<div class="grid grid-cols-3 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
 
 <div class="bg-[#1A1A1A] p-6 rounded-2xl border border-[#2A2A2A]">
 <p class="text-gray-400">Entradas</p>
@@ -96,9 +92,7 @@ R$ 0,00
 
 </div>
 
-
 <!-- GRÁFICO -->
-
 <div class="bg-[#1A1A1A] p-6 rounded-2xl border border-[#2A2A2A] mb-8">
 
 <h2 class="text-xl font-semibold mb-6">
@@ -111,9 +105,7 @@ Resumo <span class="text-[#D4AF37]">Financeiro</span>
 
 </div>
 
-
 <!-- HISTÓRICO -->
-
 <div class="bg-[#1A1A1A] p-6 rounded-2xl border border-[#2A2A2A]">
 
 <h2 class="text-xl font-semibold mb-6">
@@ -126,25 +118,17 @@ Histórico de <span class="text-[#D4AF37]">Transações</span>
 
 </main>
 
-
-
 <!-- BOTÃO + -->
-
 <button
 id="openModal"
-class="fixed bottom-8 right-8 bg-[#D4AF37] text-black w-16 h-16 rounded-full text-3xl shadow-lg hover:scale-110 transition flex items-center justify-center">
-
+class="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-[#D4AF37] text-black w-14 h-14 md:w-16 md:h-16 rounded-full text-3xl shadow-lg hover:scale-110 transition flex items-center justify-center">
 +
-
 </button>
 
-
-
 <!-- MODAL -->
+<div id="transactionModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4">
 
-<div id="transactionModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center">
-
-<div class="bg-[#1A1A1A] p-8 rounded-2xl w-96 border border-[#2A2A2A]">
+<div class="bg-[#1A1A1A] p-6 rounded-2xl w-[90%] max-w-md border border-[#2A2A2A]">
 
 <h2 class="text-xl font-semibold mb-6">
 Nova <span class="text-[#D4AF37]">Transação</span>
@@ -172,18 +156,14 @@ required
 id="type"
 class="w-full p-3 rounded-lg bg-black border border-[#2A2A2A]"
 >
-
 <option value="income">Entrada</option>
 <option value="expense">Saída</option>
-
 </select>
 
 <button
 type="submit"
 class="w-full bg-[#D4AF37] text-black font-semibold p-3 rounded-lg">
-
 Salvar
-
 </button>
 
 </form>
@@ -192,34 +172,23 @@ Salvar
 
 </div>
 
-
-
 <script src="js/core/storage.js"></script>
 <script src="js/modules/auth.js"></script>
 <script src="js/modules/transactions.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
 
 <script>
 
 Auth.checkAuth()
 
 const user = Storage.get("gold_user")
-
 document.getElementById("userName").innerText = user.name
 
-
 const today = new Date()
-
 document.getElementById("currentDate").innerText =
 today.toLocaleDateString("pt-BR",{weekday:"long",year:"numeric",month:"long",day:"numeric"})
 
-
-
 const balance = Transactions.getBalance()
-
-
 
 document.getElementById("incomeValue").innerText =
 balance.income.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})
@@ -230,52 +199,32 @@ balance.expense.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})
 document.getElementById("balanceValue").innerText =
 balance.total.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})
 
-
-
-/* HISTÓRICO */
-
 const list = document.getElementById("transactionList")
-
 const transactions = Transactions.getAll()
 
 transactions.reverse().forEach(t=>{
-
 const div=document.createElement("div")
 
 div.className="flex justify-between items-center bg-[#111] p-4 rounded-lg border border-[#2A2A2A]"
 
 div.innerHTML=`
-
 <div>
-
 <p class="font-semibold">${t.description}</p>
-
-<p class="text-sm text-gray-400">
-${t.type==="income"?"Entrada":"Saída"}
-</p>
-
+<p class="text-sm text-gray-400">${t.type==="income"?"Entrada":"Saída"}</p>
 </div>
 
 <div class="${t.type==="income"?"text-green-400":"text-red-400"} font-semibold">
-
 ${t.amount.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
-
 </div>
 `
 
 list.appendChild(div)
-
 })
-
-
-
-/* GRÁFICO */
 
 const ctx=document.getElementById("financeChart")
 
 new Chart(ctx,{
 type:"bar",
-
 data:{
 labels:["Entradas","Saídas"],
 datasets:[{
@@ -285,7 +234,6 @@ borderRadius:8,
 barThickness:30
 }]
 },
-
 options:{
 indexAxis:"y",
 plugins:{legend:{display:false}},
@@ -294,12 +242,7 @@ x:{ticks:{color:"#aaa"},grid:{color:"#222"}},
 y:{ticks:{color:"#aaa"},grid:{display:false}}
 }
 }
-
 })
-
-
-
-/* MODAL */
 
 const openModal=document.getElementById("openModal")
 const modal=document.getElementById("transactionModal")
@@ -317,21 +260,15 @@ modal.classList.add("hidden")
 }
 
 form.addEventListener("submit",(e)=>{
-
 e.preventDefault()
 
 const description=document.getElementById("description").value
 const amount=parseFloat(document.getElementById("amount").value)
 const type=document.getElementById("type").value
 
-Transactions.add({
-description,
-amount,
-type
-})
+Transactions.add({description,amount,type})
 
 location.reload()
-
 })
 
 </script>
